@@ -32,3 +32,22 @@ models/
 
 # Mac OS
 .DS_Store
+
+# Archivos de configuración local
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs de uvicorn / FastAPI
+*.log
+
+# Distribución / empaquetado
+dist/
+build/
+*.egg-info/
+
+# mypy / type checking
+.mypy_cache/
