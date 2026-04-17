@@ -9,3 +9,9 @@ python-dotenv
 fastapi
 uvicorn
 joblib
+geopandas
+shapely
+contextily
+
+# Para visualización de mapas interactivos
+folium
