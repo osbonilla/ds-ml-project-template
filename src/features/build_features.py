@@ -5,10 +5,10 @@ Traslada la lógica de notebooks/02_limpieza_enriquecimiento.ipynb
 a funciones reutilizables y reproducibles.
 
 Pipeline:
-    1. Imputación de NaN con KNNImputer (fit solo en train)
+    1. Imputación de NaN con KNNImputer (fit solo en train pero funciona para datos crudos)
     2. Codificación ordinal de ocean_proximity
     3. Feature engineering: nuevas variables combinadas
-    4. Escalado con StandardScaler (fit solo en train)
+    4. Escalado con StandardScaler (fit solo en train pero funciona para datos crudos)
     5. Guardado del CSV procesado + artefactos (.pkl)
 
 Uso:
