@@ -15,3 +15,7 @@ contextily
 
 # Para visualización de mapas interactivos
 folium
+
+
+# Archivos estaticos
+aiofiles

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estimación de Precio de Vivienda — California</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="page">
+
+        <header class="header">
+            <div class="header-inner">
+                <div class="brand">
+                    <span class="brand-dot"></span>
+                    <span class="brand-name">Housing Estimator</span>
+                </div>
+                <div id="status-pill" class="status-pill">
+                    <span class="status-dot"></span>
+                    <span class="status-label">Verificando...</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+
+            <section class="hero">
+                <p class="hero-eyebrow">California, USA</p>
+                <h1 class="hero-title">Estimación de precio<br/>de vivienda</h1>
+                <p class="hero-desc">Ingrese los datos del bloque censal para obtener una estimación del valor mediano de vivienda en dólares.</p>
+            </section>
+
+            <div class="content">
+
+                <form id="predict-form" class="form-card" novalidate>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label for="housing_median_age">Edad mediana de viviendas</label>
+                            <div class="input-wrap">
+                                <input type="number" id="housing_median_age" placeholder="28" min="1" max="52" step="1" required />
+                                <span class="input-unit">años</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="median_income">Ingreso mediano</label>
+                            <div class="input-wrap">
+                                <input type="number" id="median_income" placeholder="4.50" min="0.5" max="15" step="0.01" required />
+                                <span class="input-unit">×$10k</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="total_rooms">Total de habitaciones</label>
+                            <div class="input-wrap">
+                                <input type="number" id="total_rooms" placeholder="2500" min="1" step="1" required />
+                                <span class="input-unit">und.</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="total_bedrooms">Total de dormitorios</label>
+                            <div class="input-wrap">
+                                <input type="number" id="total_bedrooms" placeholder="500" min="1" step="1" required />
+                                <span class="input-unit">und.</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="population">Población</label>
+                            <div class="input-wrap">
+                                <input type="number" id="population" placeholder="1200" min="1" step="1" required />
+                                <span class="input-unit">personas</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="households">Hogares</label>
+                            <div class="input-wrap">
+                                <input type="number" id="households" placeholder="400" min="1" step="1" required />
+                                <span class="input-unit">familias</span>
+                            </div>
+                        </div>
+
+                        <div class="field field--full">
+                            <label for="ocean_proximity">Proximidad al océano</label>
+                            <div class="select-wrap">
+                                <select id="ocean_proximity" required>
+                                    <option value="" disabled selected>Seleccionar categoría...</option>
+                                    <option value="INLAND">INLAND — Interior continental</option>
+                                    <option value="<1H OCEAN">&lt;1H OCEAN — Menos de 1 hora al mar</option>
+                                    <option value="NEAR OCEAN">NEAR OCEAN — Cerca del océano</option>
+                                    <option value="NEAR BAY">NEAR BAY — Cerca de la bahía</option>
+                                    <option value="ISLAND">ISLAND — Isla</option>
+                                </select>
+                                <svg class="select-chevron" viewBox="0 0 16 16" fill="none">
+                                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="submit" id="submit-btn" class="btn-primary">
+                            <span class="btn-text">Obtener estimación</span>
+                            <span class="btn-loading" hidden>Procesando...</span>
+                        </button>
+                    </div>
+
+                </form>
+
+                <aside class="result-panel">
+
+                    <div id="state-idle" class="state-idle">
+                        <div class="idle-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="8" y="22" width="32" height="22" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M4 24L24 8l20 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <rect x="18" y="30" width="12" height="14" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <p>Complete el formulario para obtener la estimación de precio.</p>
+                    </div>
+
+                    <div id="state-result" class="state-result" hidden>
+                        <p class="result-label">Valor estimado de vivienda</p>
+                        <div class="result-price" id="result-price">$0</div>
+                        <div class="result-track">
+                            <div class="result-bar" id="result-bar"></div>
+                        </div>
+                        <div class="result-range">
+                            <span>$0</span><span>$500,000+</span>
+                        </div>
+
+                        <div class="derived-section">
+                            <p class="derived-title">Indicadores derivados</p>
+                            <div class="derived-list">
+                                <div class="derived-row">
+                                    <span class="derived-key">Habitaciones por hogar</span>
+                                    <span class="derived-val" id="d-rph">—</span>
+                                </div>
+                                <div class="derived-row">
+                                    <span class="derived-key">Ratio dormitorios / habitaciones</span>
+                                    <span class="derived-val" id="d-bpr">—</span>
+                                </div>
+                                <div class="derived-row">
+                                    <span class="derived-key">Personas por hogar</span>
+                                    <span class="derived-val" id="d-pph">—</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="reset-btn" class="btn-secondary">Nueva estimación</button>
+                    </div>
+
+                    <div id="state-error" class="state-error" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <p id="error-msg">Error al procesar la solicitud.</p>
+                        <button id="error-reset-btn" class="btn-secondary">Intentar de nuevo</button>
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </main>
+
+        <footer class="footer">
+            <div class="footer-inner">
+                <p class="footer-title">Aplicación Web para la estimación de precio de vivienda<br/><span>Caso: California, USA</span></p>
+                <div class="footer-right">
+                    <p class="footer-author">Desarrollado por<br/><strong>Oldrin Santiago Bonilla Cáceres</strong></p>
+                    <a href="https://github.com/osbonilla" target="_blank" rel="noopener" class="github-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.167 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                        </svg>
+                        <span>osbonilla</span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
