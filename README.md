@@ -1,5 +1,6 @@
-# Proyecto Final — Fundamentos de Ciencia de Datos — USFQ  
-Desarrollado por **Oldrin Santiago Bonilla Cáceres** 
+# Proyecto Final — Fundamentos de Ciencia de Datos · USFQ
+  
+Desarrollado por **Oldrin Santiago Bonilla Cáceres** · [@osbonilla](https://github.com/osbonilla)
 
 Pipeline completo de Machine Learning para la predicción del valor mediano de vivienda en distritos de California: desde los datos crudos hasta dos versiones de API desplegadas con interfaz web.
 
@@ -62,7 +63,7 @@ ds-ml-project-template/
 │   │   └── train_model.py         ← Entrena y serializa best_model.pkl
 │   └── api/
 │       ├── main.py                ← API v1 — formulario estático
-│       ├── main_geo.py            ← API v2 — mapa interactivo Leaflet.js
+│       ├── main_geo.py            ← API v2 — mapa interactivo Leaflet
 │       └── static/
 │           ├── index.html         ← UI v1
 │           ├── style.css
@@ -70,13 +71,13 @@ ds-ml-project-template/
 │           └── geo/               ← UI v2 geográfica
 │               ├── index.html
 │               ├── style.css
-│               └── app.js
+│               ├── app.js
+│               └── california.geojson  ← contorno oficial del estado (MultiPolygon)
 │
 ├── reports/
 │   └── figures/                   ← Gráficas generadas por los notebooks
 │
 ├── references/                    ← Fuentes y bibliografía
-├── .env.example
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -271,10 +272,11 @@ Abre `http://127.0.0.1:8001/geo`
 
 ### Validaciones del mapa
 
-El mapa incluye dos validaciones antes de permitir la predicción:
+El mapa usa el contorno oficial de California (`california.geojson`, MultiPolygon) para validar cada clic mediante un algoritmo de **ray casting** — una sola validación que cubre el estado completo, incluyendo las Channel Islands, y excluye automáticamente el océano Pacífico, Nevada, Arizona y Baja California.
 
-1. **Bounding box de California** (`32.5°–42.0° N`, `-124.5°–-114.1° W`) — fuera del rango muestra un toast de advertencia y bloquea el formulario.
-2. **Detección de océano** — línea costera aproximada de 53 puntos interpolada por latitud. Si el clic cae al oeste de la costa (Pacífico), bloquea con mensaje.
+Si el punto cae fuera de California o en el océano, aparece un toast de advertencia y el formulario queda bloqueado hasta seleccionar una ubicación válida en tierra firme.
+
+> **Nota — prototipo geoespacial:** Esta versión es un prototipo funcional. En una implementación de producción podría reemplazarse por un modelo ML espacial (clasificación por bloque censal del Census Bureau) o integrarse con **ArcGIS** — usando ArcGIS Maps SDK for JavaScript para el mapa y ArcGIS API for Python para enriquecer automáticamente los campos del formulario con datos reales del censo dado un punto geográfico.
 
 ### Ejemplo de request
 
@@ -322,6 +324,7 @@ curl -X POST http://127.0.0.1:8001/predict/geo \
 
 **Geoespacial**
 - Rey, S., Arribas-Bel, D. & Wolf, L. J. — *Geographic Data Science with Python*. (referencia para el mapa interactivo, validación de coordenadas y análisis geoespacial con geopandas y contextily)
+
 
 ---
 
