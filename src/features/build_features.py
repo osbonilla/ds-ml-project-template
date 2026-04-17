@@ -228,7 +228,7 @@ def build_features(
     out = X_train.copy()
     out[TARGET] = y_train.values
     out.to_csv(processed_path / "train_processed.csv", index=False)
-    print(f"  ✅ train_processed.csv → {out.shape[0]:,} filas x {out.shape[1]} columnas")
+    print(f"train_processed.csv → {out.shape[0]:,} filas x {out.shape[1]} columnas")
 
     if save_artifacts:
         MODELS_PATH.mkdir(parents=True, exist_ok=True)
